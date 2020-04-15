@@ -70,6 +70,7 @@ namespace HomeTaskApi.Controllers
 
             _db.Update(homeTask);
             await _db.SaveChangesAsync();
+            await _hubContext.Clients.All.SendAsync("changeTaskHandle");
             return Ok(homeTask);
         }
 
@@ -82,11 +83,10 @@ namespace HomeTaskApi.Controllers
 
             _db.HomeTasks.Remove(homeTask);
             await _db.SaveChangesAsync();
+            await _hubContext.Clients.All.SendAsync("removeTaskHandle");
             return Ok(homeTask);
         }
     }
 
-    public class MyHub : Hub
-    {
-    }
+    public class MyHub : Hub{}
 }

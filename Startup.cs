@@ -28,7 +28,7 @@ namespace HomeTaskApi
             /*services.AddCors(options =>
             {
                 options.AddPolicy("AllowTestSite", builder => builder
-                    .WithOrigins("https://localhost:44321")
+                    .WithOrigins("https://localhost:56964")
                     .AllowAnyHeader()
                     .AllowAnyMethod());
             });*/
