@@ -8,8 +8,7 @@ namespace HomeTaskApi.Models
 {
     public class HomeTasksContext : DbContext
     {
-        public DbSet<Master> Masters { get; set; }
-        public DbSet<Slave> Slaves { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<HomeTask> HomeTasks { get; set; }
         public HomeTasksContext(DbContextOptions<HomeTasksContext> options) : base(options)
         {

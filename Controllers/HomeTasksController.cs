@@ -24,30 +24,40 @@ namespace HomeTaskApi.Controllers
             _hubContext = hubContext;
             if (!_db.HomeTasks.Any())
             {
-                var m = new Master() { Name = "master" };
-                _db.Masters.Add(m);
-                _db.SaveChanges();
-                var s = new Slave() { Name = "Koza" };
-                _db.Slaves.Add(s);
+                var m = new User(_db) { Name = "master" };
+                var s = new User(_db) { Name = "Koza" };
+                _db.Users.AddRange(m, s);
                 _db.SaveChanges();
 
-                _db.HomeTasks.Add(new HomeTask { Master = m, Guid = Guid.NewGuid(), Slave = s, Desc = "Wake up" });
+                var t1 = new HomeTask() { User = m, Type = TaskType.MasterTask, Desc = "MasterTask" };
+                var t2 = new HomeTask() { User = s, Type = TaskType.SlaveTask, Desc = "SlaveTask" };
+                _db.HomeTasks.AddRange(t1, t2);
                 _db.SaveChanges();
+
+                /*_db.HomeTasks.Add(new HomeTask { Master = m, Guid = Guid.NewGuid(), Slave = s, Desc = "Wake up" });
+                _db.SaveChanges();*/
             }
         }
 
         // GET: api/<controller>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<HomeTask>>> Get()
+        public async Task<ActionResult<IEnumerable<User>>> Get()
         {
-            return await _db.HomeTasks.Include(x => x.Master).Include(x => x.Slave).ToListAsync();
+            return await _db.Users.Include(x => x.Tasks).ThenInclude(y=>y.User).ToListAsync();
+        }
+
+        [HttpGet]
+        [Route("tasks")]
+        public async Task<ActionResult<IEnumerable<HomeTask>>> GetTasks()
+        {
+            return await _db.HomeTasks.Include(x=>x.User).ToListAsync();
         }
 
         // GET api/<controller>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<HomeTask>> Get(int id)
+        public async Task<ActionResult<User>> Get(int id)
         {
-            var user = await _db.HomeTasks.FirstOrDefaultAsync(x => x.Id == id);
+            var user = await _db.Users.Include(x => x.Tasks).FirstOrDefaultAsync(x => x.Id == id);
             if (user == null) return NotFound();
             return new ObjectResult(user);
         }
