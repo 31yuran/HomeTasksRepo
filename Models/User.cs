@@ -8,29 +8,13 @@ namespace HomeTaskApi.Models
 {
     public class User
     {
-        private readonly HomeTasksContext _db;
-
         public int Id { get; set; }
         public String Name { get; set; }
         public String Password { get; set; }
-        public UserRole Role { get; set; }
+        public String SlavePassword { get; set; }
         public List<HomeTask> Tasks { get; set; }
-
-        public User(HomeTasksContext context)
-        {
-            _db = context;
-        }
-
-        public override string ToString()
-        {
-            return Name;
-        }
-    }
-
-    public enum UserRole
-    {
-        Master,
-        Slave,
-        None
+        public String SlavesId { get; set; }
+        [NotMapped]
+        public List<RelatedUser> Slaves { get; set; }
     }
 }

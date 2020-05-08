@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HomeTaskApi.Controllers;
 using HomeTaskApi.Models;
+using HomeTaskApi.Services;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -22,6 +23,9 @@ namespace HomeTaskApi
         {
             var con = "Server=(localdb)\\mssqllocaldb;Database=tasksdbstore;Trusted_Connection=True;";
             services.AddDbContext<HomeTasksContext>(options => options.UseSqlServer(con)); // устанавливаем контекст данных
+            services.AddScoped<UserService>();
+            services.AddScoped<TaskService>();
+
             services.AddControllers().AddNewtonsoftJson(
                 options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore); // используем контроллеры без представлений
             services.AddCors();
